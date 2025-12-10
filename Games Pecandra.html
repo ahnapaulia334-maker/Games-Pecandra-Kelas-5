@@ -1,0 +1,2439 @@
+<html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PECANDRA - Pecahan Cerdas dan Ceria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Bangers&family=Press+Start+2P&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Neue', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            style background-color: #FFC0CB;
+            color: #333;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: linear-gradient(135deg, #f8e9a1 0%, #a8d0e6 100%);
+        }
+        
+        /* Background animasi 3D */
+        .background-3d {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .shape-3d {
+            position: absolute;
+            border-radius: 10px;
+            opacity: 0.3;
+        }
+        
+        /* Cube 3D */
+        .cube {
+            width: 80px;
+            height: 80px;
+            transform-style: preserve-3d;
+            animation: rotateCube 20s infinite linear;
+            top: 10%;
+            left: 5%;
+        }
+        
+        .cube-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(255, 209, 102, 0.5);
+            background: rgba(255, 107, 107, 0.3);
+        }
+        
+        .cube-face.front { transform: translateZ(40px); }
+        .cube-face.back { transform: rotateY(180deg) translateZ(40px); }
+        .cube-face.left { transform: rotateY(-90deg) translateZ(40px); }
+        .cube-face.right { transform: rotateY(90deg) translateZ(40px); }
+        .cube-face.top { transform: rotateX(90deg) translateZ(40px); }
+        .cube-face.bottom { transform: rotateX(-90deg) translateZ(40px); }
+        
+        /* Pyramid 3D */
+        .pyramid {
+            width: 100px;
+            height: 100px;
+            transform-style: preserve-3d;
+            animation: rotatePyramid 25s infinite linear;
+            top: 70%;
+            right: 10%;
+        }
+        
+        .pyramid-face {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+        
+        .pyramid-face.base {
+            border-width: 0 50px 86.6px 50px;
+            border-color: transparent transparent rgba(6, 214, 160, 0.3) transparent;
+            transform: rotateX(90deg) translateY(50px);
+        }
+        
+        .pyramid-face.side1 {
+            border-width: 0 50px 86.6px 50px;
+            border-color: transparent transparent rgba(26, 115, 232, 0.3) transparent;
+            transform: rotateX(30deg) rotateY(0deg);
+        }
+        
+        .pyramid-face.side2 {
+            border-width: 0 50px 86.6px 50px;
+            border-color: transparent transparent rgba(255, 209, 102, 0.3) transparent;
+            transform: rotateX(30deg) rotateY(120deg);
+        }
+        
+        .pyramid-face.side3 {
+            border-width: 0 50px 86.6px 50px;
+            border-color: transparent transparent rgba(255, 107, 107, 0.3) transparent;
+            transform: rotateX(30deg) rotateY(240deg);
+        }
+        
+        /* Sphere 3D */
+        .sphere {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 209, 102, 0.4), rgba(255, 107, 107, 0.2));
+            animation: floatSphere 15s infinite ease-in-out;
+            bottom: 20%;
+            left: 15%;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Cylinder 3D */
+        .cylinder {
+            width: 80px;
+            height: 120px;
+            position: absolute;
+            top: 20%;
+            right: 20%;
+            animation: rotateCylinder 18s infinite linear;
+        }
+        
+        .cylinder-top, .cylinder-bottom {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(26, 115, 232, 0.3);
+            position: absolute;
+            border: 2px solid rgba(255, 209, 102, 0.5);
+        }
+        
+        .cylinder-top {
+            top: 0;
+        }
+        
+        .cylinder-bottom {
+            bottom: 0;
+        }
+        
+        .cylinder-body {
+            width: 80px;
+            height: 120px;
+            background: rgba(26, 115, 232, 0.2);
+            position: absolute;
+            top: 40px;
+            border-radius: 40px / 60px;
+            border: 2px solid rgba(255, 209, 102, 0.3);
+        }
+        
+        /* Animations for 3D shapes */
+        @keyframes rotateCube {
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(180deg); }
+        }
+        
+        @keyframes rotatePyramid {
+            0% { transform: rotateX(0) rotateY(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg); }
+        }
+        
+        @keyframes floatSphere {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-30px) translateX(20px); }
+            50% { transform: translateY(0) translateX(40px); }
+            75% { transform: translateY(30px) translateX(20px); }
+        }
+        
+        @keyframes rotateCylinder {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        /* Floating fractions */
+        .floating-fraction {
+            position: absolute;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: rgba(255, 107, 107, 0.6);
+            font-family: 'Press Start 2P', cursive;
+            z-index: -1;
+            animation: floatFraction 20s infinite linear;
+        }
+        
+        @keyframes floatFraction {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+            25% { transform: translateY(-100px) rotate(90deg); opacity: 0.6; }
+            50% { transform: translateY(0) rotate(180deg); opacity: 0.3; }
+            75% { transform: translateY(100px) rotate(270deg); opacity: 0.6; }
+            100% { transform: translateY(0) rotate(360deg); opacity: 0.3; }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Halaman Umum */
+        .page {
+            display: none;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 100, 200, 0.2);
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease;
+            border: 5px solid #ffd166;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: #ff6b6b;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.8rem;
+            text-shadow: 2px 2px 0 #ffd166, 4px 4px 0 rgba(0, 0, 0, 0.1);
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+        }
+        
+        h2 {
+            color: #1a73e8;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 0 rgba(255, 209, 102, 0.5);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.6rem;
+        }
+        
+        h3 {
+            color: #06d6a0;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 0 #0d5bb5;
+            margin: 5px;
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 1px;
+        }
+        
+        .btn:hover {
+            background-color: #0d5bb5;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 #0a4a94;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 #0a4a94;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-success {
+            background-color: #06d6a0;
+            box-shadow: 0 4px 0 #04b586;
+        }
+        
+        .btn-success:hover {
+            background-color: #04b586;
+            box-shadow: 0 6px 0 #03976e;
+        }
+        
+        .btn-warning {
+            background-color: #ffd166;
+            color: #333;
+            box-shadow: 0 4px 0 #e6b850;
+        }
+        
+        .btn-warning:hover {
+            background-color: #e6b850;
+            box-shadow: 0 6px 0 #cc9f39;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        /* Splash Screen */
+        #splash-screen {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            border-radius: 0;
+            background-image: radial-gradient(circle at 30% 30%, #ff9a9e, #fad0c4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #splash-screen::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.1) 0px,
+                rgba(255, 255, 255, 0.1) 20px,
+                transparent 20px,
+                transparent 40px
+            );
+            animation: slideBackground 20s infinite linear;
+            z-index: 0;
+        }
+        
+        @keyframes slideBackground {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+        
+        .logo {
+            font-size: 4rem;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+            z-index: 1;
+        }
+        
+        .fraction {
+            display: inline-block;
+            font-size: 3rem;
+            margin: 0 10px;
+            color: #ff6b6b;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 2px 2px 0 #ffd166;
+            z-index: 1;
+        }
+        
+        /* Login Screen */
+        .avatar-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .avatar:hover {
+            transform: scale(1.1);
+        }
+        
+        .avatar.selected {
+            border-color: #1a73e8;
+            box-shadow: 0 0 20px rgba(26, 115, 232, 0.7);
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #1a73e8;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 3px solid #ffd166;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: border-color 0.3s;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .input-group input:focus {
+            border-color: #1a73e8;
+            outline: none;
+            box-shadow: 0 0 10px rgba(26, 115, 232, 0.3);
+        }
+        
+        /* Intro Masalah */
+        .story-box {
+            background-color: rgba(232, 244, 252, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 5px solid #1a73e8;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Eksplorasi Konsep - Video */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* Rasio 16:9 */
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 3px solid #ffd166;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .video-instruction {
+            background-color: rgba(232, 244, 252, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 3px solid #1a73e8;
+        }
+        
+        /* Pizza Game */
+        .pizza-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .pizza-slice {
+            width: 80px;
+            height: 80px;
+            margin: 5px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .pizza-slice:hover {
+            transform: scale(1.1);
+        }
+        
+        .pizza-result {
+            min-height: 100px;
+            border: 3px dashed #06d6a0;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            background-color: rgba(6, 214, 160, 0.1);
+        }
+        
+        .fraction-display {
+            font-size: 2rem;
+            margin: 0 10px;
+            color: #ff6b6b;
+            font-weight: bold;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        /* Level Tantangan */
+        .question-box {
+            background-color: rgba(249, 249, 249, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 3px solid #ffd166;
+            position: relative;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .option {
+            background-color: #e8f4fc;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1.2rem;
+            font-family: 'Fredoka One', cursive;
+            border: 2px solid transparent;
+        }
+        
+        .option:hover {
+            background-color: #d4e7f7;
+            transform: translateY(-3px);
+            border-color: #1a73e8;
+        }
+        
+        .option.correct {
+            background-color: #c8f7e5;
+            border: 2px solid #06d6a0;
+        }
+        
+        .option.incorrect {
+            background-color: #ffeaea;
+            border: 2px solid #ff6b6b;
+        }
+        
+        .visual-representation {
+            height: 100px;
+            background: linear-gradient(to right, #ffd166 0%, #ffd166 50%, #f0f0f0 50%);
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+            border: 2px solid #ff9a9e;
+        }
+        
+        .visual-fill {
+            height: 100%;
+            background-color: #ff9a9e;
+            border-radius: 10px 0 0 10px;
+            width: 0%;
+            transition: width 1s;
+        }
+        
+        .drag-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .drag-item {
+            padding: 10px 20px;
+            background-color: #ffd166;
+            border-radius: 10px;
+            margin: 5px;
+            cursor: move;
+            user-select: none;
+            font-family: 'Fredoka One', cursive;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .drag-item:hover {
+            transform: scale(1.05);
+            border-color: #1a73e8;
+        }
+        
+        .drop-zone {
+            min-height: 100px;
+            border: 3px dashed #1a73e8;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+        
+        /* Mini Game */
+        .game-container {
+            height: 400px;
+            border: 3px solid #1a73e8;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            background-color: rgba(232, 244, 252, 0.7);
+        }
+        
+        .basket {
+            position: absolute;
+            bottom: 10px;
+            width: 100px;
+            height: 50px;
+            background-color: #06d6a0;
+            border-radius: 10px 10px 0 0;
+            transition: left 0.1s;
+            box-shadow: 0 -3px 0 #04b586;
+        }
+        
+        .falling-item {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+            top: -60px;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        
+        .timer {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            text-align: center;
+            margin: 10px 0;
+            font-family: 'Bangers', cursive;
+            text-shadow: 2px 2px 0 #ffd166;
+        }
+        
+        /* Refleksi dan Leaderboard */
+        .certificate {
+            background-color: #fff9e6;
+            border: 10px solid #ffd166;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 209, 102, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 107, 107, 0.2) 0%, transparent 20%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .star {
+            color: #ffd700;
+            font-size: 2rem;
+        }
+        
+        .star.empty {
+            color: #ddd;
+        }
+        
+        /* EVALUASI AKHIR YANG DIPERBAIKI */
+        .evaluation-container {
+            position: relative;
+        }
+        
+        .lives-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff0f0;
+            border-radius: 15px;
+            border: 3px solid #ff6b6b;
+            box-shadow: 0 5px 10px rgba(255, 107, 107, 0.2);
+        }
+        
+        .life {
+            font-size: 2rem;
+            color: #ff6b6b;
+            transition: all 0.3s;
+        }
+        
+        .life.lost {
+            color: #ddd;
+            transform: scale(0.8);
+        }
+        
+        .question-counter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(232, 244, 252, 0.9);
+            border-radius: 15px;
+            border: 2px solid #1a73e8;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+        }
+        
+        .question-counter span {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .evaluation-question {
+            background-color: rgba(249, 249, 249, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 3px solid #ffd166;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .evaluation-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .eval-option {
+            background-color: #e8f4fc;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: 3px solid transparent;
+            position: relative;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .eval-option:hover {
+            background-color: #d4e7f7;
+            border-color: #1a73e8;
+            transform: translateY(-5px);
+        }
+        
+        .eval-option.selected {
+            border-color: #ffd166;
+            box-shadow: 0 0 15px rgba(255, 209, 102, 0.5);
+        }
+        
+        .eval-option.correct {
+            background-color: #c8f7e5;
+            border-color: #06d6a0;
+        }
+        
+        .eval-option.incorrect {
+            background-color: #ffeaea;
+            border-color: #ff6b6b;
+        }
+        
+        .feedback-box {
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .correct-feedback {
+            background-color: #e8f9f3;
+            border-left: 5px solid #06d6a0;
+        }
+        
+        .incorrect-feedback {
+            background-color: #ffefef;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .next-question-btn {
+            display: none;
+            margin: 20px auto;
+        }
+        
+        .evaluation-result {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: #fff9e6;
+            border-radius: 20px;
+            border: 5px solid #ffd166;
+            margin-top: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 209, 102, 0.3) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(255, 107, 107, 0.3) 0%, transparent 30%);
+        }
+        
+        .final-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 20px 0;
+            text-shadow: 2px 2px 0 #ffd166;
+            font-family: 'Bangers', cursive;
+        }
+        
+        .result-stars {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .result-star {
+            font-size: 2.5rem;
+            color: #ffd700;
+        }
+        
+        .result-star.empty {
+            color: #ddd;
+        }
+        
+        /* Leaderboard (dipindahkan ke akhir) */
+        .leaderboard {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .leaderboard th, .leaderboard td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .leaderboard th {
+            background-color: #e8f4fc;
+            color: #1a73e8;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+        }
+        
+        .leaderboard tr:nth-child(even) {
+            background-color: rgba(249, 249, 249, 0.9);
+        }
+        
+        .leaderboard tr:hover {
+            background-color: #f0f7ff;
+        }
+        
+        /* Footer dan Navigasi */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(221, 221, 221, 0.7);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            border: 2px solid #ffd166;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #06d6a0, #1a73e8);
+            width: 10%;
+            transition: width 0.5s;
+        }
+        
+        .coin-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #ffd700;
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 50px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            border: 2px solid #ffb300;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-top: 3px solid #ffd166;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.2rem;
+            }
+            
+            .options, .evaluation-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .avatar-options {
+                flex-wrap: wrap;
+            }
+            
+            .video-container {
+                padding-bottom: 75%; /* 4:3 untuk mobile */
+            }
+            
+            /* Sembunyikan sebagian animasi 3D di mobile untuk performa */
+            .cube, .pyramid, .cylinder {
+                display: none;
+            }
+            
+            .sphere {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background animasi 3D -->
+    <div class="background-3d">
+        <!-- Cube -->
+        <div class="shape-3d cube">
+            <div class="cube-face front"></div>
+            <div class="cube-face back"></div>
+            <div class="cube-face left"></div>
+            <div class="cube-face right"></div>
+            <div class="cube-face top"></div>
+            <div class="cube-face bottom"></div>
+        </div>
+        
+        <!-- Pyramid -->
+        <div class="shape-3d pyramid">
+            <div class="pyramid-face base"></div>
+            <div class="pyramid-face side1"></div>
+            <div class="pyramid-face side2"></div>
+            <div class="pyramid-face side3"></div>
+        </div>
+        
+        <!-- Sphere -->
+        <div class="shape-3d sphere"></div>
+        
+        <!-- Cylinder -->
+        <div class="shape-3d cylinder">
+            <div class="cylinder-top"></div>
+            <div class="cylinder-body"></div>
+            <div class="cylinder-bottom"></div>
+        </div>
+        
+        <!-- Floating fractions -->
+        <div class="floating-fraction" style="top: 15%; left: 80%; animation-delay: 0s;">½</div>
+        <div class="floating-fraction" style="top: 40%; left: 10%; animation-delay: 5s;">⅓</div>
+        <div class="floating-fraction" style="top: 60%; left: 85%; animation-delay: 10s;">¼</div>
+        <div class="floating-fraction" style="top: 80%; left: 15%; animation-delay: 15s;">¾</div>
+    </div>
+    
+    <div class="coin-counter">
+        <i class="fas fa-coins"></i> <span id="coin-count">0</span> Koin
+    </div>
+    
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="page active">
+        <div class="container center">
+            <div class="logo">
+                <i class="fas fa-calculator"></i>
+            </div>
+         
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+<h1 style="font-family: 'Press Start 2P', monospace; color: #00FF00;">
+    PECANDRA</h1>
+            <p>Pecahan Cerdas dan Ceria</p>
+            
+            <div style="margin: 30px 0;">
+                <div class="fraction">½</div>
+                <div class="fraction">¾</div>
+            </div>
+            
+            <p style="margin-top: 40px; font-size: 1.2rem;">Siap membantu warga Kota Pecahan?</p>
+            <button class="btn btn-success" id="start-game">
+                <i class="fas fa-play"></i> Mulai Petualangan!
+            </button>
+        </div>
+    </div>
+    
+    <!-- Login / Profil Pemain -->
+    <div id="login-screen" class="page">
+        <div class="container">
+            <h2><i class="fas fa-user"></i> Profil Pemain</h2>
+            <p>Masukkan nama dan pilih avatar untuk memulai petualangan di Kota Pecahan!</p>
+            
+            <div class="input-group">
+                <label for="player-name">NAMA KAMU:</label>
+                <input type="text" id="player-name" placeholder="Masukkan nama kamu">
+            </div>
+            
+            <h3>Pilih Avatar:</h3>
+            <div class="avatar-options">
+                <div class="avatar selected" data-avatar="boy">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=boy1&backgroundColor=ffd166" alt="Avatar Laki-laki">
+                </div>
+                <div class="avatar" data-avatar="girl">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=girl1&backgroundColor=ff9a9e" alt="Avatar Perempuan">
+                </div>
+            </div>
+            
+            <div class="center">
+                <button class="btn btn-success" id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Masuk ke Kota Pecahan
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Intro Masalah (PBL Tahap 1) -->
+    <div id="problem-intro" class="page">
+        <div class="container">
+            <h2><i class="fas fa-exclamation-triangle"></i> Masalah di Kota Pecahan</h2>
+            
+            <div class="story-box">
+                <h3>Darurat Toko Roti!</h3>
+                <p>Di Kota Pecahan, terjadi masalah di toko roti "Lezat Selalu". Pesanan roti dalam bentuk pecahan tidak sesuai total, dan pelanggan mulai kecewa.</p>
+                <p>Pemilik toko, Pak Roti, membutuhkan bantuanmu untuk menghitung dengan benar agar pelanggan tidak kecewa dan toko bisa berjalan lancar.</p>
+                <p>Kamu siap membantu menghitung pecahan roti yang dipesan?</p>
+            </div>
+            
+            <div class="center">
+                <button class="btn btn-success" id="start-investigation">
+                    <i class="fas fa-search"></i> Mulai Investigasi
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Eksplorasi Konsep (PBL Tahap 2 & 3) -->
+    <div id="exploration" class="page">
+        <div class="container">
+            <h2><i class="fas fa-lightbulb"></i> Eksplorasi Konsep Pecahan</h2>
+            <p>Sebelum membantu toko roti, mari kita pelajari dulu cara menjumlahkan dan mengurangkan pecahan.</p>
+            
+            <!-- Video Pembelajaran -->
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/M2UPJKhzVpA" 
+                    title="Video Pembelajaran Pecahan" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div class="video-instruction">
+                <p><strong>Tips:</strong> Tonton video di atas untuk memahami konsep dasar pecahan. Video ini menjelaskan cara menjumlahkan dan mengurangkan pecahan dengan penyebut yang sama dan berbeda.</p>
+            </div>
+            
+            <h3>Simulasi Pizza Pecahan</h3>
+            <p>Geser potongan pizza ke kotak di bawah untuk membuat pecahan yang diminta:</p>
+            
+            <div class="pizza-container" id="pizza-container">
+                <!-- Potongan pizza akan ditambahkan dengan JavaScript -->
+            </div>
+            
+            <div class="pizza-result" id="pizza-result">
+                <p>Gabungkan potongan pizza di sini untuk menemukan hasil!</p>
+            </div>
+            
+            <div class="center">
+                <button class="btn btn-warning" id="check-pizza">
+                    <i class="fas fa-check"></i> Periksa Hasil
+                </button>
+                <button class="btn" id="next-exploration">
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Level Tantangan 1 -->
+    <div id="challenge-1" class="page">
+        <div class="container">
+            <h2><i class="fas fa-bread-slice"></i> Level 1: Toko Roti "Lezat Selalu"</h2>
+            
+            <div class="question-box">
+                <h3>Masalah 1: Penjumlahan Pecahan</h3>
+                <p>Toko roti memiliki <strong>⅓ loyang</strong> kue coklat dan menambah <strong>⅓ loyang</strong> lagi. Berapa total kue yang siap dijual?</p>
+                
+                <div class="visual-representation">
+                    <div class="visual-fill" id="visual-fill-1"></div>
+                </div>
+                
+                <div class="options" id="options-1">
+                    <!-- Opsi akan ditambahkan dengan JavaScript -->
+                </div>
+                
+                <div class="feedback" id="feedback-1"></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-1"></div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-small" id="back-to-exploration">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </button>
+                <button class="btn btn-small" id="next-challenge-1">
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Level Tantangan 2 -->
+    <div id="challenge-2" class="page">
+        <div class="container">
+            <h2><i class="fas fa-store"></i> Level 2: Toko Roti "Lezat Selalu"</h2>
+            
+            <div class="question-box">
+                <h3>Masalah 2: Pengurangan Pecahan</h3>
+                <p>Sisa roti <strong>⅚ loyang</strong>. Terjual <strong>½ loyang</strong>. Berapa roti yang tersisa?</p>
+                
+                <p><strong>Langkah 1:</strong> Samakan penyebutnya terlebih dahulu!</p>
+                
+                <div class="drag-container">
+                    <div class="drag-item" draggable="true" data-value="5/6">⅚ = 10/12</div>
+                    <div class="drag-item" draggable="true" data-value="1/2">½ = 6/12</div>
+                    <div class="drag-item" draggable="true" data-value="5/6">⅚ = 15/18</div>
+                    <div class="drag-item" draggable="true" data-value="1/2">½ = 9/18</div>
+                </div>
+                
+                <div class="drop-zone" id="drop-zone">
+                    <p>Taruh jawaban yang benar di sini!</p>
+                </div>
+                
+                <p><strong>Langkah 2:</strong> Hitung pengurangannya!</p>
+                <div class="options" id="options-2">
+                    <!-- Opsi akan ditambahkan dengan JavaScript -->
+                </div>
+                
+                <div class="feedback" id="feedback-2"></div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-2"></div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-small" id="back-to-challenge-1">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="btn btn-small" id="next-challenge-2">
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mini Game Bonus -->
+    <div id="mini-game" class="page">
+        <div class="container">
+            <h2><i class="fas fa-gamepad"></i> Mini Game: Tangkap Pecahan</h2>
+            <p>Tangkap pecahan yang benar dengan keranjang! Hindari pecahan yang salah. Kamu punya waktu 60 detik.</p>
+            
+            <div class="timer" id="game-timer">60</div>
+            
+            <div class="game-container" id="game-container">
+                <div class="basket" id="basket"></div>
+                <!-- Item jatuh akan ditambahkan dengan JavaScript -->
+            </div>
+            
+            <div class="center" style="margin-top: 20px;">
+                <p>Skor: <span id="game-score">0</span> | Target: 10</p>
+                <button class="btn btn-success" id="start-game-btn">
+                    <i class="fas fa-play"></i> Mulai Game
+                </button>
+                <button class="btn" id="next-after-game">
+                    Lanjut <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Refleksi Hasil (PBL Tahap 4 & 5) -->
+    <div id="reflection" class="page">
+        <div class="container">
+            <h2><i class="fas fa-chart-line"></i> Refleksi Hasil Belajar</h2>
+            <p>Selamat! Kamu telah membantu menyelesaikan masalah di Toko Roti "Lezat Selalu".</p>
+            
+            <div class="certificate">
+                <h3>Sertifikat Penyelesaian Masalah</h3>
+                <p>Diberikan kepada:</p>
+                <h2 id="certificate-name">[Nama Pemain]</h2>
+                <p>Atas partisipasi aktif dalam menyelesaikan masalah pecahan di Kota Pecahan</p>
+                
+                <div class="stars">
+                    <i class="fas fa-star star" id="star-1"></i>
+                    <i class="fas fa-star star" id="star-2"></i>
+                    <i class="fas fa-star star" id="star-3"></i>
+                </div>
+                
+                <p>Tanggal: <span id="current-date"></span></p>
+            </div>
+            
+            <div class="question-box">
+                <h3>Pertanyaan Refleksi</h3>
+                <p>Apa strategi terbaik untuk menyelesaikan penjumlahan dan pengurangan pecahan?</p>
+                
+                <div class="input-group">
+                    <textarea id="reflection-answer" rows="4" placeholder="Tulis strategi terbaikmu di sini..."></textarea>
+                </div>
+                
+                <button class="btn btn-warning" id="submit-reflection">
+                    <i class="fas fa-paper-plane"></i> Kirim Refleksi
+                </button>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-small" id="back-to-minigame">
+                    <i class="fas fa-arrow-left"></i> Sebelumnya
+                </button>
+                <button class="btn btn-small" id="next-to-evaluation">
+                    Evaluasi Akhir <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Evaluasi Akhir (10 Soal PBL) -->
+    <div id="evaluation" class="page">
+        <div class="container evaluation-container">
+            <h2><i class="fas fa-clipboard-check"></i> Evaluasi Akhir Pecahan</h2>
+            <p>Jawab 10 soal berikut untuk menguji pemahamanmu tentang penjumlahan dan pengurangan pecahan dalam konteks masalah sehari-hari!</p>
+            
+            <!-- Container untuk nyawa -->
+            <div class="lives-container">
+                <h3 style="margin: 0; color: #ff6b6b;">NYAWA:</h3>
+                <div class="lives">
+                    <i class="fas fa-heart life" id="life-1"></i>
+                    <i class="fas fa-heart life" id="life-2"></i>
+                    <i class="fas fa-heart life" id="life-3"></i>
+                </div>
+                <span id="lives-count" style="font-weight: bold; color: #ff6b6b;">3</span>
+            </div>
+            
+            <!-- Container untuk soal dan progress -->
+            <div class="question-counter">
+                <span>SOAL: <span id="current-question-num">1</span>/<span id="total-questions">10</span></span>
+                <span style="margin-left: 20px;">SKOR: <span id="current-score">0</span>/100</span>
+            </div>
+            
+            <!-- Container untuk soal -->
+            <div id="question-container">
+                <!-- Soal akan dimuat di sini oleh JavaScript -->
+            </div>
+            
+            <!-- Feedback untuk jawaban -->
+            <div class="feedback-box" id="feedback-box"></div>
+            
+            <!-- Tombol untuk lanjut ke soal berikutnya -->
+            <div class="center">
+                <button class="btn btn-success next-question-btn" id="next-question-btn">
+                    <i class="fas fa-arrow-right"></i> Soal Berikutnya
+                </button>
+            </div>
+            
+            <!-- Hasil evaluasi -->
+            <div class="evaluation-result" id="evaluation-result">
+                <h3>Evaluasi Selesai!</h3>
+                <p>Skor Akhir Kamu:</p>
+                <div class="final-score" id="final-score">0</div>
+                <p id="result-message"></p>
+                
+                <div class="result-stars">
+                    <i class="fas fa-star result-star" id="result-star-1"></i>
+                    <i class="fas fa-star result-star" id="result-star-2"></i>
+                    <i class="fas fa-star result-star" id="result-star-3"></i>
+                </div>
+                
+                <div class="center" style="margin-top: 20px;">
+                    <button class="btn btn-warning" id="restart-evaluation">
+                        <i class="fas fa-redo"></i> Ulangi Evaluasi
+                    </button>
+                    <button class="btn" id="next-to-leaderboard">
+                        Lihat Leaderboard <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="evaluation-progress"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Leaderboard dan Profil (dipindahkan ke akhir) -->
+    <div id="leaderboard" class="page">
+        <div class="container">
+            <h2><i class="fas fa-trophy"></i> Papan Peringkat Kelas</h2>
+            <p>Lihat peringkatmu dibandingkan dengan teman-teman lainnya!</p>
+            
+            <table class="leaderboard">
+                <thead>
+                    <tr>
+                        <th>Peringkat</th>
+                        <th>Nama</th>
+                        <th>Bintang</th>
+                        <th>Koin</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboard-body">
+                    <!-- Data leaderboard akan ditambahkan dengan JavaScript -->
+                </tbody>
+            </table>
+            
+            <h3 style="margin-top: 30px;">Profil Kamu</h3>
+            <div class="story-box">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div id="player-avatar-display" style="width: 80px; height: 80px; border-radius: 50%; overflow: hidden; border: 3px solid #ffd166;">
+                        <!-- Avatar akan ditampilkan di sini -->
+                    </div>
+                    <div>
+                        <h4 id="player-profile-name">Nama Pemain</h4>
+                        <p>Total Bintang: <span id="total-stars">0</span></p>
+                        <p>Total Koin: <span id="total-coins">0</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn btn-small" id="back-to-evaluation">
+                    <i class="fas fa-arrow-left"></i> Kembali
+                </button>
+                <button class="btn btn-small" id="finish-game">
+                    <i class="fas fa-home"></i> Selesai
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Game PECANDRA (Pecahan Cerdas dan Ceria) - Create by Ahnap Aulia Hanapiah 22060116 PGSD IKIP SILIWANGI </p>
+            <p>Didesain untuk Siswa Kelas V Sekolah Dasar</p>
+            <p>© 2025 - Matematika Menyenangkan</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Data game
+        let gameData = {
+            playerName: "",
+            playerAvatar: "boy",
+            coins: 0,
+            stars: 0,
+            currentPage: "splash-screen",
+            progress: 10,
+            challenge1Completed: false,
+            challenge2Completed: false,
+            miniGameScore: 0,
+            evaluationScore: 0
+        };
+        
+        // Data evaluasi (10 soal)
+        let evaluationData = {
+            currentQuestion: 0,
+            score: 0,
+            lives: 3,
+            totalQuestions: 10,
+            questionsAnswered: 0
+        };
+        
+        // Soal evaluasi dengan 10 soal PBL (Problem Based Learning)
+        const evaluationQuestions = [
+            {
+                question: "Ibu membuat kue bolu untuk arisan. Dia menggunakan ⅔ kg tepung terigu dan ¼ kg gula pasir. Berapa total berat bahan kering yang digunakan ibu?",
+                options: ["½ kg", "⅚ kg", "¾ kg", "¹¹/₁₂ kg"],
+                correct: 3,
+                explanation: "Penjelasan: ⅔ + ¼ = ⁸/₁₂ + ³/₁₂ = ¹¹/₁₂ kg. Samakan penyebut terlebih dahulu (KPK dari 3 dan 4 adalah 12)."
+            },
+            {
+                question: "Di perpustakaan, ⅗ rak berisi buku cerita dan ⅒ rak berisi buku pengetahuan. Berapa bagian rak yang telah terisi buku?",
+                options: ["⅖", "⅗", "⅞", "⁷/₁₀"],
+                correct: 3,
+                explanation: "Penjelasan: ⅗ + ⅒ = ⁶/₁₀ + ⅒ = ⁷/₁₀. Samakan penyebutnya (10), kemudian jumlahkan pembilangnya."
+            },
+            {
+                question: "Pak Budi memiliki sebidang tanah seluas ⅞ hektar. Sebagian tanah seluas ⅜ hektar ditanami padi. Berapa luas tanah yang belum ditanami?",
+                options: ["½ hektar", "⅝ hektar", "¼ hektar", "¾ hektar"],
+                correct: 0,
+                explanation: "Penjelasan: ⅞ - ⅜ = ⁴/₈ = ½ hektar. Karena penyebutnya sudah sama, langsung kurangkan pembilangnya."
+            },
+            {
+                question: "Rina memiliki pita sepanjang ¾ meter. Dia menggunakan ⅓ meter untuk menghias kado ulang tahun temannya. Berapa meter sisa pita Rina?",
+                options: ["¹/₁₂ meter", "⅙ meter", "⁵/₁₂ meter", "½ meter"],
+                correct: 2,
+                explanation: "Penjelasan: ¾ - ⅓ = ⁹/₁₂ - ⁴/₁₂ = ⁵/₁₂ meter. Samakan penyebut terlebih dahulu (KPK dari 4 dan 3 adalah 12)."
+            },
+            {
+                question: "Dalam satu botol terdapat ⅘ liter sirup. Setelah digunakan untuk membuat minuman, tersisa ⅖ liter. Berapa liter sirup yang telah digunakan?",
+                options: ["⅕ liter", "⅖ liter", "⅗ liter", "⅘ liter"],
+                correct: 1,
+                explanation: "Penjelasan: ⅘ - ⅖ = ⅖ liter. Karena penyebutnya sudah sama (5), langsung kurangkan pembilangnya: 4 - 2 = 2."
+            },
+            {
+                question: "Sebuah kue dipotong menjadi 8 bagian sama besar. Andi makan ⅜ bagian, Budi makan ⅛ bagian. Berapa bagian kue yang telah dimakan?",
+                options: ["½", "⅜", "⅝", "¾"],
+                correct: 0,
+                explanation: "Penjelasan: ⅜ + ⅛ = ⁴/₈ = ½. Karena penyebutnya sudah sama (8), langsung jumlahkan pembilangnya: 3 + 1 = 4."
+            },
+            {
+                question: "Ibu membeli ½ kg apel dan ¾ kg jeruk. Berapa total berat buah yang dibeli ibu?",
+                options: ["1 kg", "1¼ kg", "1½ kg", "1⅓ kg"],
+                correct: 1,
+                explanation: "Penjelasan: ½ + ¾ = ²/₄ + ¾ = ⁵/₄ = 1¼ kg. Ubah ½ menjadi ²/₄ agar penyebutnya sama dengan 4, kemudian jumlahkan."
+            },
+            {
+                question: "Di sebuah pesta, tersedia ⅝ loyang kue coklat dan ⅜ loyang kue keju. Berapa bagian total kue yang tersedia?",
+                options: ["½ loyang", "¾ loyang", "1 loyang", "⅞ loyang"],
+                correct: 2,
+                explanation: "Penjelasan: ⅝ + ⅜ = ⁸/₈ = 1 loyang. Karena penyebutnya sudah sama (8), langsung jumlahkan pembilangnya: 5 + 3 = 8."
+            },
+            {
+                question: "Seorang tukang kayu memiliki papan sepanjang ⁷/₈ meter. Dia memotong ½ meter untuk membuat rak. Berapa meter sisa papan?",
+                options: ["³/₈ meter", "⅜ meter", "¼ meter", "⁵/₈ meter"],
+                correct: 0,
+                explanation: "Penjelasan: ⁷/₈ - ½ = ⁷/₈ - ⁴/₈ = ³/₈ meter. Ubah ½ menjadi ⁴/₈ agar penyebutnya sama dengan 8, kemudian kurangkan."
+            },
+            {
+                question: "Sebuah toko roti membuat ⅔ loyang roti coklat dan ¼ loyang roti keju. Berapa total roti yang dibuat?",
+                options: ["¹¹/₁₂ loyang", "¾ loyang", "⁵/₆ loyang", "⁷/₁₂ loyang"],
+                correct: 0,
+                explanation: "Penjelasan: ⅔ + ¼ = ⁸/₁₂ + ³/₁₂ = ¹¹/₁₂ loyang. Samakan penyebut terlebih dahulu (KPK dari 3 dan 4 adalah 12)."
+            }
+        ];
+        
+        // Data leaderboard (contoh)
+        const leaderboardData = [
+            { name: "Rina", stars: 12, coins: 150 },
+            { name: "Budi", stars: 10, coins: 120 },
+            { name: "Sari", stars: 8, coins: 100 },
+            { name: "Andi", stars: 7, coins: 90 },
+            { name: "Dina", stars: 5, coins: 70 }
+        ];
+        
+        // Fungsi untuk berpindah halaman
+        function goToPage(pageId) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Tampilkan halaman yang dipilih
+            document.getElementById(pageId).classList.add('active');
+            gameData.currentPage = pageId;
+            
+            // Update progress bar
+            updateProgressBar();
+            
+            // Jika halaman leaderboard, update data
+            if (pageId === 'leaderboard') {
+                updateLeaderboard();
+                updatePlayerProfile();
+            }
+            
+            // Jika halaman refleksi, update sertifikat
+            if (pageId === 'reflection') {
+                updateCertificate();
+            }
+            
+            // Jika halaman evaluasi, reset dan mulai evaluasi
+            if (pageId === 'evaluation') {
+                resetEvaluation();
+                loadQuestion();
+            }
+        }
+        
+        // Reset evaluasi
+        function resetEvaluation() {
+            evaluationData = {
+                currentQuestion: 0,
+                score: 0,
+                lives: 3,
+                totalQuestions: evaluationQuestions.length,
+                questionsAnswered: 0
+            };
+            
+            // Reset tampilan nyawa
+            document.getElementById('life-1').classList.remove('lost');
+            document.getElementById('life-2').classList.remove('lost');
+            document.getElementById('life-3').classList.remove('lost');
+            document.getElementById('lives-count').textContent = evaluationData.lives;
+            
+            // Reset skor dan progress
+            document.getElementById('current-score').textContent = evaluationData.score;
+            document.getElementById('current-question-num').textContent = 1;
+            document.getElementById('total-questions').textContent = evaluationData.totalQuestions;
+            document.getElementById('evaluation-progress').style.width = '0%';
+            
+            // Sembunyikan hasil dan tombol
+            document.getElementById('evaluation-result').style.display = 'none';
+            document.getElementById('next-question-btn').style.display = 'none';
+            document.getElementById('feedback-box').style.display = 'none';
+            document.getElementById('question-container').style.display = 'block';
+        }
+        
+        // Muat soal
+        function loadQuestion() {
+            const questionContainer = document.getElementById('question-container');
+            const currentQuestion = evaluationQuestions[evaluationData.currentQuestion];
+            
+            questionContainer.innerHTML = `
+                <div class="evaluation-question">
+                    <h3>Soal ${evaluationData.currentQuestion + 1}</h3>
+                    <p style="font-size: 1.3rem; margin: 20px 0;">${currentQuestion.question}</p>
+                    <div class="evaluation-options">
+                        ${currentQuestion.options.map((option, index) => `
+                            <div class="eval-option" data-index="${index}">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // Tambahkan event listener untuk opsi
+            document.querySelectorAll('.eval-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Jika sudah menjawab, jangan izinkan jawaban lagi
+                    if (this.classList.contains('selected') || evaluationData.questionsAnswered > evaluationData.currentQuestion) {
+                        return;
+                    }
+                    
+                    const selectedIndex = parseInt(this.getAttribute('data-index'));
+                    const isCorrect = selectedIndex === currentQuestion.correct;
+                    
+                    // Tandai jawaban yang dipilih
+                    this.classList.add('selected');
+                    
+                    // Setelah animasi selesai, periksa jawaban
+                    setTimeout(() => {
+                        checkAnswer(isCorrect, selectedIndex, currentQuestion);
+                    }, 300);
+                });
+            });
+        }
+        
+        // Periksa jawaban
+        function checkAnswer(isCorrect, selectedIndex, question) {
+            // Tampilkan jawaban yang benar
+            const options = document.querySelectorAll('.eval-option');
+            options[question.correct].classList.add('correct');
+            
+            // Jika salah, tandai jawaban yang salah
+            if (!isCorrect) {
+                options[selectedIndex].classList.add('incorrect');
+                
+                // Kurangi nyawa
+                evaluationData.lives--;
+                document.getElementById('lives-count').textContent = evaluationData.lives;
+                
+                // Update tampilan nyawa
+                const lifeIcons = document.querySelectorAll('.life');
+                for (let i = 0; i < 3; i++) {
+                    if (i >= evaluationData.lives) {
+                        lifeIcons[i].classList.add('lost');
+                    }
+                }
+                
+                // Tampilkan feedback
+                showFeedback(false, question.explanation);
+            } else {
+                // Tambah skor jika benar
+                evaluationData.score += 10;
+                document.getElementById('current-score').textContent = evaluationData.score;
+                
+                // Tampilkan feedback
+                showFeedback(true, question.explanation);
+            }
+            
+            // Tandai bahwa soal ini sudah dijawab
+            evaluationData.questionsAnswered++;
+            
+            // Periksa apakah masih ada nyawa
+            if (evaluationData.lives <= 0) {
+                // Jika nyawa habis, tunggu sebentar lalu tampilkan hasil
+                setTimeout(() => {
+                    showEvaluationResult();
+                }, 2000);
+            } else {
+                // Tampilkan tombol lanjut jika masih ada nyawa dan belum semua soal dijawab
+                if (evaluationData.currentQuestion < evaluationData.totalQuestions - 1) {
+                    setTimeout(() => {
+                        document.getElementById('next-question-btn').style.display = 'block';
+                    }, 1500);
+                } else {
+                    // Jika ini soal terakhir, tunggu sebentar lalu tampilkan hasil
+                    setTimeout(() => {
+                        showEvaluationResult();
+                    }, 2000);
+                }
+            }
+        }
+        
+        // Tampilkan feedback
+        function showFeedback(isCorrect, explanation) {
+            const feedbackBox = document.getElementById('feedback-box');
+            
+            if (isCorrect) {
+                feedbackBox.className = 'feedback-box correct-feedback';
+                feedbackBox.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-check-circle" style="color: #06d6a0; font-size: 2rem;"></i>
+                        <div>
+                            <h4 style="color: #06d6a0; margin-bottom: 5px;">Jawaban Benar! +10 Poin</h4>
+                            <p>${explanation}</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                feedbackBox.className = 'feedback-box incorrect-feedback';
+                feedbackBox.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <i class="fas fa-times-circle" style="color: #ff6b6b; font-size: 2rem;"></i>
+                        <div>
+                            <h4 style="color: #ff6b6b; margin-bottom: 5px;">Jawaban Salah -1 Nyawa</h4>
+                            <p>${explanation}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            feedbackBox.style.display = 'block';
+        }
+        
+        // Lanjut ke soal berikutnya
+        function nextQuestion() {
+            evaluationData.currentQuestion++;
+            
+            // Update progress bar
+            const progressPercent = (evaluationData.currentQuestion / evaluationData.totalQuestions) * 100;
+            document.getElementById('evaluation-progress').style.width = `${progressPercent}%`;
+            
+            // Update nomor soal
+            document.getElementById('current-question-num').textContent = evaluationData.currentQuestion + 1;
+            
+            // Sembunyikan tombol dan feedback
+            document.getElementById('next-question-btn').style.display = 'none';
+            document.getElementById('feedback-box').style.display = 'none';
+            
+            // Muat soal berikutnya
+            loadQuestion();
+        }
+        
+        // Tampilkan hasil evaluasi
+        function showEvaluationResult() {
+            // Simpan skor ke gameData
+            gameData.evaluationScore = evaluationData.score;
+            
+            // Tampilkan hasil
+            document.getElementById('final-score').textContent = evaluationData.score;
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('next-question-btn').style.display = 'none';
+            document.getElementById('feedback-box').style.display = 'none';
+            
+            // Tentukan pesan berdasarkan skor
+            let message = "";
+            let starCount = 0;
+            
+            if (evaluationData.score >= 80) {
+                message = "LUAR BIASA! Kamu benar-benar menguasai materi pecahan!";
+                starCount = 3;
+                gameData.coins += 100;
+                gameData.stars += 5;
+            } else if (evaluationData.score >= 60) {
+                message = "HEBAT! Kamu sudah memahami konsep pecahan dengan baik.";
+                starCount = 2;
+                gameData.coins += 70;
+                gameData.stars += 3;
+            } else if (evaluationData.score >= 40) {
+                message = "BAIK! Kamu sudah paham dasar-dasar pecahan.";
+                starCount = 1;
+                gameData.coins += 50;
+                gameData.stars += 2;
+            } else {
+                message = "TERUS BERLATIH! Kamu butuh lebih banyak latihan untuk menguasai pecahan.";
+                gameData.coins += 30;
+                gameData.stars += 1;
+            }
+            
+            document.getElementById('result-message').textContent = message;
+            
+            // Tampilkan bintang berdasarkan skor
+            const stars = document.querySelectorAll('.result-star');
+            for (let i = 0; i < 3; i++) {
+                if (i < starCount) {
+                    stars[i].classList.remove('empty');
+                } else {
+                    stars[i].classList.add('empty');
+                }
+            }
+            
+            // Tampilkan hasil
+            document.getElementById('evaluation-result').style.display = 'block';
+            
+            // Update coin counter
+            updateCoinCounter();
+        }
+        
+        // Update progress bar
+        function updateProgressBar() {
+            let progress = 10;
+            
+            switch(gameData.currentPage) {
+                case 'login-screen': progress = 20; break;
+                case 'problem-intro': progress = 30; break;
+                case 'exploration': progress = 40; break;
+                case 'challenge-1': progress = 50; break;
+                case 'challenge-2': progress = 60; break;
+                case 'mini-game': progress = 70; break;
+                case 'reflection': progress = 80; break;
+                case 'evaluation': progress = 90; break;
+                case 'leaderboard': progress = 100; break;
+            }
+            
+            gameData.progress = progress;
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = `${progress}%`;
+            });
+        }
+        
+        // Update coin counter
+        function updateCoinCounter() {
+            document.getElementById('coin-count').textContent = gameData.coins;
+        }
+        
+        // Update sertifikat
+        function updateCertificate() {
+            document.getElementById('certificate-name').textContent = gameData.playerName || "Pahlawan Pecahan";
+            
+            // Set tanggal
+            const now = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID', options);
+            
+            // Update bintang berdasarkan prestasi
+            let starCount = 0;
+            if (gameData.challenge1Completed) starCount++;
+            if (gameData.challenge2Completed) starCount++;
+            if (gameData.miniGameScore >= 5) starCount++;
+            
+            // Tampilkan bintang
+            for (let i = 1; i <= 3; i++) {
+                const star = document.getElementById(`star-${i}`);
+                if (i <= starCount) {
+                    star.classList.remove('empty');
+                } else {
+                    star.classList.add('empty');
+                }
+            }
+            
+            // Event listener untuk tombol submit refleksi
+            document.getElementById('submit-reflection').addEventListener('click', function() {
+                const answer = document.getElementById('reflection-answer').value;
+                if (answer.trim() === "") {
+                    alert("Tulis strategi terbaikmu terlebih dahulu!");
+                    return;
+                }
+                
+                alert("Refleksi berhasil dikirim! Strategi belajar akan membantu teman-teman lainnya.");
+                gameData.coins += 20;
+                updateCoinCounter();
+            });
+        }
+        
+        // Update leaderboard
+        function updateLeaderboard() {
+            const tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = '';
+            
+            // Tambahkan data leaderboard
+            leaderboardData.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.stars} <i class="fas fa-star" style="color: #ffd700;"></i></td>
+                    <td>${player.coins} <i class="fas fa-coins" style="color: #ffd700;"></i></td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Tambahkan pemain saat ini di akhir
+            const currentRow = document.createElement('tr');
+            currentRow.style.fontWeight = 'bold';
+            currentRow.style.backgroundColor = '#e8f4fc';
+            currentRow.innerHTML = `
+                <td>?</td>
+                <td>${gameData.playerName || "Kamu"}</td>
+                <td>${gameData.stars} <i class="fas fa-star" style="color: #ffd700;"></i></td>
+                <td>${gameData.coins} <i class="fas fa-coins" style="color: #ffd700;"></i></td>
+            `;
+            tbody.appendChild(currentRow);
+        }
+        
+        // Update profil pemain
+        function updatePlayerProfile() {
+            document.getElementById('player-profile-name').textContent = gameData.playerName || "Pahlawan Pecahan";
+            document.getElementById('total-stars').textContent = gameData.stars;
+            document.getElementById('total-coins').textContent = gameData.coins;
+            
+            // Tampilkan avatar
+            const avatarDisplay = document.getElementById('player-avatar-display');
+            const avatarType = gameData.playerAvatar === 'boy' ? 'boy1' : 'girl1';
+            avatarDisplay.innerHTML = `<img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${avatarType}&backgroundColor=${gameData.playerAvatar === 'boy' ? 'ffd166' : 'ff9a9e'}" alt="Avatar">`;
+        }
+        
+        // Inisialisasi game saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listener untuk tombol mulai
+            document.getElementById('start-game').addEventListener('click', function() {
+                goToPage('login-screen');
+            });
+            
+            // Event listener untuk avatar
+            document.querySelectorAll('.avatar').forEach(avatar => {
+                avatar.addEventListener('click', function() {
+                    document.querySelectorAll('.avatar').forEach(av => av.classList.remove('selected'));
+                    this.classList.add('selected');
+                    gameData.playerAvatar = this.getAttribute('data-avatar');
+                });
+            });
+            
+            // Event listener untuk login
+            document.getElementById('login-btn').addEventListener('click', function() {
+                const playerName = document.getElementById('player-name').value;
+                if (playerName.trim() === "") {
+                    alert("Masukkan namamu terlebih dahulu!");
+                    return;
+                }
+                
+                gameData.playerName = playerName;
+                goToPage('problem-intro');
+            });
+            
+            // Event listener untuk mulai investigasi
+            document.getElementById('start-investigation').addEventListener('click', function() {
+                goToPage('exploration');
+                initializePizzaGame();
+            });
+            
+            // Event listener untuk navigasi
+            document.getElementById('next-exploration').addEventListener('click', function() {
+                goToPage('challenge-1');
+                initializeChallenge1();
+            });
+            
+            document.getElementById('back-to-exploration').addEventListener('click', function() {
+                goToPage('exploration');
+            });
+            
+            document.getElementById('next-challenge-1').addEventListener('click', function() {
+                goToPage('challenge-2');
+                initializeChallenge2();
+            });
+            
+            document.getElementById('back-to-challenge-1').addEventListener('click', function() {
+                goToPage('challenge-1');
+            });
+            
+            document.getElementById('next-challenge-2').addEventListener('click', function() {
+                goToPage('mini-game');
+            });
+            
+            document.getElementById('next-after-game').addEventListener('click', function() {
+                goToPage('reflection');
+            });
+            
+            document.getElementById('back-to-minigame').addEventListener('click', function() {
+                goToPage('mini-game');
+            });
+            
+            document.getElementById('next-to-evaluation').addEventListener('click', function() {
+                goToPage('evaluation');
+            });
+            
+            // Event listener untuk evaluasi
+            document.getElementById('next-question-btn').addEventListener('click', function() {
+                nextQuestion();
+            });
+            
+            // Event listener untuk restart evaluasi
+            document.getElementById('restart-evaluation').addEventListener('click', function() {
+                resetEvaluation();
+                loadQuestion();
+                document.getElementById('evaluation-result').style.display = 'none';
+                document.getElementById('question-container').style.display = 'block';
+            });
+            
+            // Event listener untuk lanjut ke leaderboard dari hasil evaluasi
+            document.getElementById('next-to-leaderboard').addEventListener('click', function() {
+                goToPage('leaderboard');
+            });
+            
+            // Event listener untuk kembali dari leaderboard ke evaluasi
+            document.getElementById('back-to-evaluation').addEventListener('click', function() {
+                goToPage('evaluation');
+            });
+            
+            // Event listener untuk menyelesaikan game
+            document.getElementById('finish-game').addEventListener('click', function() {
+                if (confirm("Apakah kamu ingin menyelesaikan permainan dan kembali ke awal?")) {
+                    // Reset data game sebagian
+                    gameData.coins = 0;
+                    gameData.stars = 0;
+                    gameData.challenge1Completed = false;
+                    gameData.challenge2Completed = false;
+                    gameData.miniGameScore = 0;
+                    gameData.evaluationScore = 0;
+                    
+                    updateCoinCounter();
+                    goToPage('splash-screen');
+                }
+            });
+            
+            // Inisialisasi coin counter
+            updateCoinCounter();
+            
+            // Inisialisasi drag and drop untuk challenge 2
+            initializeDragAndDrop();
+            
+            // Inisialisasi mini game
+            initializeMiniGame();
+        });
+        
+        // Fungsi untuk game pizza
+        function initializePizzaGame() {
+            const pizzaContainer = document.getElementById('pizza-container');
+            const pizzaResult = document.getElementById('pizza-result');
+            
+            pizzaContainer.innerHTML = '';
+            pizzaResult.innerHTML = '<p>Gabungkan potongan pizza di sini untuk menemukan hasil 1/2 + 1/4!</p>';
+            
+            // Buat potongan pizza
+            const slices = [
+                { fraction: "1/2", color: "#ff9a9e" },
+                { fraction: "1/4", color: "#ffd166" },
+                { fraction: "1/4", color: "#06d6a0" },
+                { fraction: "1/8", color: "#1a73e8" },
+                { fraction: "1/8", color: "#9d4edd" }
+            ];
+            
+            slices.forEach(slice => {
+                const sliceElement = document.createElement('div');
+                sliceElement.className = 'pizza-slice';
+                sliceElement.innerHTML = `
+                    <div style="width: 100%; height: 100%; background-color: ${slice.color}; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 1.2rem; border: 2px solid white;">
+                        ${slice.fraction}
+                    </div>
+                `;
+                
+                // Buat draggable
+                sliceElement.setAttribute('draggable', 'true');
+                sliceElement.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', slice.fraction + '|' + slice.color);
+                });
+                
+                pizzaContainer.appendChild(sliceElement);
+            });
+            
+            // Buat drop zone
+            pizzaResult.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#f0fff4';
+            });
+            
+            pizzaResult.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            pizzaResult.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text/plain').split('|');
+                const fraction = data[0];
+                const color = data[1];
+                
+                const fractionElement = document.createElement('div');
+                fractionElement.className = 'fraction-display';
+                fractionElement.innerHTML = `
+                    <div style="display: inline-block; background-color: ${color}; padding: 5px 10px; border-radius: 10px; color: white; border: 2px solid white;">
+                        ${fraction}
+                    </div>
+                `;
+                
+                this.appendChild(fractionElement);
+                this.style.backgroundColor = '';
+            });
+            
+            // Tombol periksa hasil
+            document.getElementById('check-pizza').addEventListener('click', function() {
+                const fractions = pizzaResult.querySelectorAll('.fraction-display');
+                if (fractions.length >= 2) {
+                    alert("Bagus! Kamu sudah menggabungkan potongan pizza. Hasil dari 1/2 + 1/4 adalah 3/4!");
+                    gameData.coins += 10;
+                    updateCoinCounter();
+                } else {
+                    alert("Gabungkan setidaknya 2 potongan pizza terlebih dahulu!");
+                }
+            });
+        }
+        
+        // Fungsi untuk challenge 1
+        function initializeChallenge1() {
+            const optionsContainer = document.getElementById('options-1');
+            const feedbackContainer = document.getElementById('feedback-1');
+            const visualFill = document.getElementById('visual-fill-1');
+            
+            // Animasikan visual fill
+            setTimeout(() => {
+                visualFill.style.width = '66%';
+            }, 500);
+            
+            // Buat opsi
+            const options = [
+                { text: "⅓", correct: false },
+                { text: "⅔", correct: true },
+                { text: "1", correct: false },
+                { text: "1⅓", correct: false }
+            ];
+            
+            optionsContainer.innerHTML = '';
+            feedbackContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option.text;
+                optionElement.dataset.correct = option.correct;
+                
+                optionElement.addEventListener('click', function() {
+                    // Hapus seleksi sebelumnya
+                    document.querySelectorAll('#options-1 .option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Tandai yang dipilih
+                    this.classList.add('selected');
+                    
+                    // Tampilkan feedback
+                    if (this.dataset.correct === 'true') {
+                        feedbackContainer.innerHTML = '<p style="color: #06d6a0; font-weight: bold;"><i class="fas fa-check-circle"></i> Benar! ⅓ + ⅓ = ⅔</p>';
+                        feedbackContainer.innerHTML += '<p>Total kue yang siap dijual adalah ⅔ loyang.</p>';
+                        
+                        // Beri hadiah
+                        gameData.coins += 20;
+                        gameData.stars += 1;
+                        gameData.challenge1Completed = true;
+                        updateCoinCounter();
+                        
+                        // Tandai opsi yang benar
+                        this.classList.add('correct');
+                    } else {
+                        feedbackContainer.innerHTML = '<p style="color: #ff6b6b; font-weight: bold;"><i class="fas fa-times-circle"></i> Coba lagi!</p>';
+                        feedbackContainer.innerHTML += '<p>Ingat, ketika penyebutnya sama, kita hanya menjumlahkan pembilangnya: 1/3 + 1/3 = 2/3</p>';
+                        
+                        // Tandai opsi yang salah
+                        this.classList.add('incorrect');
+                    }
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        // Fungsi untuk challenge 2
+        function initializeChallenge2() {
+            const optionsContainer = document.getElementById('options-2');
+            const feedbackContainer = document.getElementById('feedback-2');
+            
+            // Buat opsi
+            const options = [
+                { text: "¼", correct: false },
+                { text: "⅓", correct: true },
+                { text: "½", correct: false },
+                { text: "⅔", correct: false }
+            ];
+            
+            optionsContainer.innerHTML = '';
+            feedbackContainer.innerHTML = '';
+            
+            options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option.text;
+                optionElement.dataset.correct = option.correct;
+                
+                optionElement.addEventListener('click', function() {
+                    // Hapus seleksi sebelumnya
+                    document.querySelectorAll('#options-2 .option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Tandai yang dipilih
+                    this.classList.add('selected');
+                    
+                    // Tampilkan feedback
+                    if (this.dataset.correct === 'true') {
+                        feedbackContainer.innerHTML = '<p style="color: #06d6a0; font-weight: bold;"><i class="fas fa-check-circle"></i> Benar! ⅚ - ½ = ⅓</p>';
+                        feedbackContainer.innerHTML += '<p>Langkah penyelesaian: ⅚ - ½ = ⅚ - ³/₆ = ²/₆ = ⅓</p>';
+                        
+                        // Beri hadiah
+                        gameData.coins += 30;
+                        gameData.stars += 2;
+                        gameData.challenge2Completed = true;
+                        updateCoinCounter();
+                        
+                        // Tandai opsi yang benar
+                        this.classList.add('correct');
+                    } else {
+                        feedbackContainer.innerHTML = '<p style="color: #ff6b6b; font-weight: bold;"><i class="fas fa-times-circle"></i> Coba lagi!</p>';
+                        feedbackContainer.innerHTML += '<p>Ingat, samakan penyebut terlebih dahulu: ⅚ = ⅚, ½ = ³/₆. Kemudian kurangkan: ⁵/₆ - ³/₆ = ²/₆ = ⅓</p>';
+                        
+                        // Tandai opsi yang salah
+                        this.classList.add('incorrect');
+                    }
+                });
+                
+                optionsContainer.appendChild(optionElement);
+            });
+        }
+        
+        // Fungsi untuk drag and drop
+        function initializeDragAndDrop() {
+            const dropZone = document.getElementById('drop-zone');
+            const dragItems = document.querySelectorAll('.drag-item');
+            
+            // Event listener untuk item yang bisa didrag
+            dragItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.getAttribute('data-value'));
+                });
+            });
+            
+            // Event listener untuk drop zone
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '#f0f7ff';
+            });
+            
+            dropZone.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                const data = e.dataTransfer.getData('text/plain');
+                
+                // Cek apakah jawaban benar (harus 5/6 = 10/12 dan 1/2 = 6/12)
+                if (data === '5/6' || data === '1/2') {
+                    const item = document.querySelector(`.drag-item[data-value="${data}"]`);
+                    const clone = item.cloneNode(true);
+                    clone.style.margin = '5px';
+                    this.appendChild(clone);
+                    
+                    // Beri koin
+                    gameData.coins += 5;
+                    updateCoinCounter();
+                }
+                
+                this.style.backgroundColor = '';
+            });
+        }
+        
+        // Fungsi untuk mini game
+        function initializeMiniGame() {
+            const gameContainer = document.getElementById('game-container');
+            const basket = document.getElementById('basket');
+            const timerDisplay = document.getElementById('game-timer');
+            const scoreDisplay = document.getElementById('game-score');
+            const startButton = document.getElementById('start-game-btn');
+            
+            let gameInterval;
+            let itemInterval;
+            let timeLeft = 60;
+            let score = 0;
+            let gameActive = false;
+            
+            // Posisi basket
+            let basketPosition = gameContainer.clientWidth / 2 - 50;
+            basket.style.left = basketPosition + 'px';
+            
+            // Kontrol basket dengan keyboard
+            document.addEventListener('keydown', function(e) {
+                if (!gameActive) return;
+                
+                const containerWidth = gameContainer.clientWidth;
+                const basketWidth = 100;
+                
+                if (e.key === 'ArrowLeft' && basketPosition > 0) {
+                    basketPosition -= 20;
+                } else if (e.key === 'ArrowRight' && basketPosition < containerWidth - basketWidth) {
+                    basketPosition += 20;
+                }
+                
+                basket.style.left = basketPosition + 'px';
+            });
+            
+            // Kontrol basket dengan mouse/touch
+            gameContainer.addEventListener('mousemove', function(e) {
+                if (!gameActive) return;
+                
+                const rect = gameContainer.getBoundingClientRect();
+                const containerWidth = gameContainer.clientWidth;
+                const basketWidth = 100;
+                
+                basketPosition = e.clientX - rect.left - basketWidth / 2;
+                
+                // Batasi pergerakan basket
+                if (basketPosition < 0) basketPosition = 0;
+                if (basketPosition > containerWidth - basketWidth) basketPosition = containerWidth - basketWidth;
+                
+                basket.style.left = basketPosition + 'px';
+            });
+            
+            // Fungsi untuk membuat item jatuh
+            function createFallingItem() {
+                if (!gameActive) return;
+                
+                const item = document.createElement('div');
+                item.className = 'falling-item';
+                
+                // Tentukan apakah item benar atau salah
+                const isCorrect = Math.random() > 0.4;
+                const fractionsCorrect = ['½', '⅓', '¼', '⅔', '¾'];
+                const fractionsIncorrect = ['⅔', '⅘', '⅚', '⅞', '⅛'];
+                
+                const fraction = isCorrect 
+                    ? fractionsCorrect[Math.floor(Math.random() * fractionsCorrect.length)]
+                    : fractionsIncorrect[Math.floor(Math.random() * fractionsIncorrect.length)];
+                
+                item.textContent = fraction;
+                item.dataset.correct = isCorrect;
+                
+                // Warna berdasarkan benar/salah
+                item.style.backgroundColor = isCorrect ? '#06d6a0' : '#ff6b6b';
+                
+                // Posisi acak
+                const maxWidth = gameContainer.clientWidth - 60;
+                item.style.left = Math.floor(Math.random() * maxWidth) + 'px';
+                
+                gameContainer.appendChild(item);
+                
+                // Animasi jatuh
+                let topPosition = -60;
+                const fallInterval = setInterval(() => {
+                    if (!gameActive) {
+                        clearInterval(fallInterval);
+                        item.remove();
+                        return;
+                    }
+                    
+                    topPosition += 3;
+                    item.style.top = topPosition + 'px';
+                    
+                    // Deteksi tabrakan dengan basket
+                    const itemRect = item.getBoundingClientRect();
+                    const basketRect = basket.getBoundingClientRect();
+                    
+                    if (
+                        itemRect.bottom >= basketRect.top &&
+                        itemRect.top <= basketRect.bottom &&
+                        itemRect.right >= basketRect.left &&
+                        itemRect.left <= basketRect.right
+                    ) {
+                        // Item ditangkap
+                        item.remove();
+                        clearInterval(fallInterval);
+                        
+                        if (isCorrect) {
+                            score++;
+                            scoreDisplay.textContent = score;
+                            gameData.coins += 5;
+                            updateCoinCounter();
+                            
+                            if (score >= 10) {
+                                endMiniGame(true);
+                            }
+                        } else {
+                            // Jika menangkap yang salah, kurangi skor
+                            score = Math.max(0, score - 1);
+                            scoreDisplay.textContent = score;
+                        }
+                    }
+                    
+                    // Jika item jatuh ke bawah
+                    if (topPosition > gameContainer.clientHeight) {
+                        item.remove();
+                        clearInterval(fallInterval);
+                    }
+                }, 50);
+            }
+            
+            // Fungsi untuk memulai game
+            function startMiniGame() {
+                if (gameActive) return;
+                
+                // Reset game
+                gameActive = true;
+                timeLeft = 60;
+                score = 0;
+                scoreDisplay.textContent = score;
+                startButton.disabled = true;
+                startButton.textContent = "Game Berjalan...";
+                
+                // Hapus item lama
+                document.querySelectorAll('.falling-item').forEach(item => item.remove());
+                
+                // Timer
+                gameInterval = setInterval(() => {
+                    timeLeft--;
+                    timerDisplay.textContent = timeLeft;
+                    
+                    if (timeLeft <= 0) {
+                        endMiniGame(false);
+                    }
+                }, 1000);
+                
+                // Buat item jatuh setiap 1.5 detik
+                itemInterval = setInterval(() => {
+                    createFallingItem();
+                }, 1500);
+                
+                // Buat item pertama
+                setTimeout(() => createFallingItem(), 500);
+            }
+            
+            // Fungsi untuk mengakhiri game
+            function endMiniGame(isWin) {
+                gameActive = false;
+                clearInterval(gameInterval);
+                clearInterval(itemInterval);
+                startButton.disabled = false;
+                startButton.textContent = "Main Lagi";
+                
+                // Hapus item yang masih jatuh
+                document.querySelectorAll('.falling-item').forEach(item => item.remove());
+                
+                // Simpan skor
+                gameData.miniGameScore = score;
+                
+                // Beri hadiah
+                if (isWin) {
+                    alert(`Selamat! Kamu mencapai target 10 poin dengan waktu ${60 - timeLeft} detik tersisa!`);
+                    gameData.coins += 50;
+                    gameData.stars += 1;
+                } else if (score >= 5) {
+                    alert(`Waktu habis! Skormu: ${score}. Kamu mendapatkan bonus!`);
+                    gameData.coins += 30;
+                } else {
+                    alert(`Waktu habis! Skormu: ${score}. Coba lagi untuk mendapatkan lebih banyak koin!`);
+                }
+                
+                updateCoinCounter();
+            }
+            
+            // Event listener untuk tombol mulai
+            startButton.addEventListener('click', startMiniGame);
+        }
+    </script>
+</body>
+</html>
